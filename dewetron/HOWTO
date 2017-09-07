@@ -1,0 +1,36 @@
+To add an unsupported module, you must create a new .py file to define it. The metaclass must be Dewe_module.
+
+You can use this template: 
+
+**MODULE_NAME.PY**
+#####
+class Dewe_**Module name**(object):(no dashes -, only underscores _)
+  __metaclass__ = Dewe_module
+  def __init__(self,address):
+    self.name = **Module name** (dashes allowed)
+    self.type_id = "xx" Type 2 digit reply when communicating with this module (see documentation) as A STRING
+
+  def check_address(self,ser):
+    ser.write("??%02i\r"%self.mod_address)
+    r = ser.read(XX) Replace XX with the length of the reply
+    return r[1:3] == "%02i"%self.mod_address and r[3:5] == self.type_id
+
+  def set_address(self,ser,mod_addr,reset=False):
+    self.mod_address = mod_addr
+    if reset or not self.check_address(ser):
+      print("Setting address for module",mod_addr,"module type:",self.name)
+      raw_input("Press the corresponding button and press enter when ready")
+      ser.write("##%02iSETD\r"%mod_addr)
+
+  def get_config(self,ser):
+    ser.write("??%02i\r"%self.mod_address)
+    r = ser.read(20)
+    print("REPLY:",r)
+    assert r[0:5] == "!%02i35"%self.mod_address,"Incorrect reply!"
+    return r
+
+###
+You must then add this line to the __init__.py:
+from **MODULE_NAME** import Dewe_**Module_Name**
+
+See the already implemented modules for more details.
