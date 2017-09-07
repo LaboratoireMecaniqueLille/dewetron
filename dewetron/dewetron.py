@@ -88,3 +88,8 @@ class Dewetron(object):
   def get_config(self,mod_address):
     return self.mod[mod_address].get_config(self.ser)
 
+  def set_config(self,mod_address,**kwargs):
+    return self.mod[mod_address].set_config(self.ser,**kwargs)
+
+  def print_config(self,mod_address):
+    return self.mod[mod_address].print_config(self.ser)
